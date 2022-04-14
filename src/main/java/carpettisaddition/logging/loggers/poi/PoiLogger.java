@@ -80,4 +80,17 @@ public class PoiLogger extends AbstractLogger {
 		});
 
 	}
+	public void OnNewSchedule(ServerWorld serverWorld,PathAwareEntity pathAwareEntity,long time){
+		if (!TISAdditionLoggerRegistry.__poi){
+			return;
+		}
+		StringBuffer output = new StringBuffer();
+		output.append("Villager:["+pathAwareEntity.getUuid()+"] is Schedule search in["+serverWorld.getTime()+"]\n");
+		output.append("Next searching is in ["+time+"]\n");
+		LoggerRegistry.getLogger(NAME).log(()-> {
+			return new BaseText[]{
+					Messenger.s(output.toString()
+					)};
+		});
+	}
 }

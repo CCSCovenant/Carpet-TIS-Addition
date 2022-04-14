@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Set;
 
@@ -58,6 +60,22 @@ public class FindPointOfInterestTaskMixin {
 
 		}else {
 			PoiLogger.getInstance().OnRun(world, entity, time, positionExpireTimeLimit);
+		}
+	}
+	@Inject(
+			method = "shouldRun(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/mob/PathAwareEntity;)Z",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/world/World;getTime()J",
+					shift = At.Shift.AFTER
+			),
+			locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	void onStatesCheck(ServerWorld serverWorld, PathAwareEntity pathAwareEntity, CallbackInfoReturnable<Boolean> cir){
+		if(!this.poiType.equals(PointOfInterestType.UNEMPLOYED)){
+
+		}else {
+			PoiLogger.getInstance().OnNewSchedule(serverWorld,pathAwareEntity,positionExpireTimeLimit);
 		}
 	}
 
