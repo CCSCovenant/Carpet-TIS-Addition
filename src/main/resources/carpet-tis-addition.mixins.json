@@ -171,6 +171,7 @@
     "logger.turtleegg.TurtleEggBlockMixin",
     "logger.xporb.ExperienceOrbEntityAccessor",
     "logger.xporb.ExperienceOrbEntityMixin",
+    "logger.poi.FindPointOfInterestTaskMixin",
     "rule.antiSpamDisabled.ServerPlayNetworkHandlerMixin",
     "rule.blockEventPacketRange.ServerWorldMixin",
     "rule.blockPlacementIgnoreEntity.BlockItemMixin",

@@ -10,6 +10,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.poi.PointOfInterestStorage;
+import net.minecraft.world.poi.PointOfInterestType;
 import org.checkerframework.checker.units.qual.A;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,31 +24,29 @@ import java.util.Set;
 
 @Mixin(FindPointOfInterestTask.class)
 public class FindPointOfInterestTaskMixin {
+	@Shadow @Final private PointOfInterestType poiType;
 
-	@Shadow private long positionExpireTimeLimit;
 
-	@ModifyVariable(
-			method = "run(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/mob/PathAwareEntity;J)V",
-			at = @At("STORE"),
-			ordinal = 1,
-			print = true
-	)
-	private Path onPathCreate(Path path){
-		System.out.println("pathing");
-		PoiLogger.getInstance().setPath(path);
-		return path;
-	}
-	@ModifyVariable(
-			method = "run(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/mob/PathAwareEntity;J)V",
-			at = @At("STORE"),
-			ordinal = 1,
-			print = true
-	)
-	private Set<BlockPos> onBlockSelected(Set<BlockPos> blockPosSet){
-		System.out.println("seraching");
-		PoiLogger.getInstance().setBlockPosSet(blockPosSet);
-		return blockPosSet;
-	}
+		@Shadow private long positionExpireTimeLimit;
+
+		@ModifyVariable(
+				method = "run(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/mob/PathAwareEntity;J)V",
+				at = @At("STORE"),
+				ordinal = 0
+		)
+		private Path onPathCreate(Path path){
+			PoiLogger.getInstance().setPath(path);
+			return path;
+		}
+		@ModifyVariable(
+				method = "run(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/mob/PathAwareEntity;J)V",
+				at = @At("STORE"),
+				ordinal = 0
+		)
+		private Set<BlockPos> onBlockSelected(Set<BlockPos> blockPosSet){
+			PoiLogger.getInstance().setBlockPosSet(blockPosSet);
+			return blockPosSet;
+		}
 
 
 	@Inject(
@@ -55,9 +54,13 @@ public class FindPointOfInterestTaskMixin {
 			at = @At("RETURN")
 	)
 	 void run(ServerWorld world, PathAwareEntity entity, long time, CallbackInfo ci) {
-		System.out.println("r");
-		PoiLogger.getInstance().OnRun(world, entity, time, this.positionExpireTimeLimit);
+		if(!this.poiType.equals(PointOfInterestType.UNEMPLOYED)){
+
+		}else {
+			PoiLogger.getInstance().OnRun(world, entity, time, positionExpireTimeLimit);
+		}
 	}
+
 }
 
 

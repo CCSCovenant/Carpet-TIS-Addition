@@ -52,26 +52,21 @@ public class PoiLogger extends AbstractLogger {
 
 		StringBuilder out = new StringBuilder();
 		out.append("Pathing:");
-		for (BlockPos blockPos:blockPosSet){
-			out.append("["+blockPos.toShortString()+"]");
-		}
+		out.append("["+path.getTarget().toShortString()+"]");
 		return out.toString();
 	}
 
 	public void setBlockPosSet(Set<BlockPos> blockPosSet) {
-		System.out.println("seraching");
 		this.blockPosSet = blockPosSet;
 	}
 
 	public void setPath(Path path) {
-		System.out.println("pathing");
 		this.path = path;
 	}
 	public void OnRun(ServerWorld serverWorld, PathAwareEntity pathAwareEntity, long init,long next){
 		if (!TISAdditionLoggerRegistry.__poi){
 			return;
 		}
-		System.out.println("running");
 		StringBuffer output = new StringBuffer();
 		output.append("Villager:["+pathAwareEntity.getUuid()+"] is searching Poi in["+init+"]\n");
 		output.append("Next searching is in ["+next+"]\n");
